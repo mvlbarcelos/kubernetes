@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+import requests
 
 app = Flask(__name__)
 
@@ -8,14 +9,19 @@ PRODUCTS = {
     '3' : {'name' : 'Franziskaner'}
 }
 
+def price(id):
+    r = requests.get('http://price/{}'.format(id))
+    return r.json()['price']
 
 @app.route('/')
 def products():
     return jsonify(PRODUCTS)
 
-@app.route('/<code>')
-def product(code):
-    return jsonify(PRODUCTS[code])
+@app.route('/<id>')
+def product(id):
+    p = PRODUCTS[id].copy()
+    p['price'] = price(id)
+    return jsonify(p)
 
 @app.route('/health')
 def health():

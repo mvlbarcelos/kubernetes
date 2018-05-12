@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: price-deployment
+spec:
+  selector:
+    matchLabels:
+      app: price
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: price
+    spec:
+      containers:
+      - name: price
+        image: price:v1
+        ports:
+        - containerPort: 5000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: price
+  namespace: default
+spec:
+  selector:
+    app: price
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5000
+  type: NodePort
