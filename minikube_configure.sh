@@ -3,7 +3,7 @@
 minikube start
 
 eval $(minikube docker-env)
-
+minikube addons enable ingress
 docker build -t product:v1 services/product
 docker build -t price:v1 services/price
 
